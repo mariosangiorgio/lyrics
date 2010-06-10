@@ -1,0 +1,6 @@
+Lyrics
+is a software to automatically get lyrics and add it to the
+meta-data of songs stored in the disk.
+
+It searches a directory for audio files and then automatically
+gets the lyrics from the web.
