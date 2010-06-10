@@ -67,7 +67,6 @@ public class LibraryExplorer {
 		for (String loggerName : loggers) {
 			Logger.getLogger(loggerName).setLevel(Level.OFF);
 		}
-		logger.setLevel(Level.OFF);
 
 		LibraryExplorer explorer = new LibraryExplorer(
 				"/Users/mariosangiorgio/Music/iTunes/iTunes Media/Music/");
