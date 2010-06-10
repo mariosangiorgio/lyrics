@@ -9,6 +9,9 @@ import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.Tag;
 
+import crawler.Crawler;
+import crawler.MetroLyricsCrawler;
+
 public class LibraryExplorer {
 	private static Logger logger = Logger.getLogger("LibraryExplorer");
 	private String path;
@@ -37,10 +40,14 @@ public class LibraryExplorer {
 						String artist = tag.getFirst(FieldKey.ARTIST);
 						String title = tag.getFirst(FieldKey.TITLE);
 						logger.info("Missing lyrics for "+title+" by "+artist+" ("+current+")");
+						Crawler crawler = new MetroLyricsCrawler();
+						lyrics = crawler.getLyrics(artist, title);
+						tag.setField(FieldKey.LYRICS, lyrics);
+						audioFile.commit();
+						logger.info("Lyrics found for "+title+" by "+artist);
 					}
 				} catch (Exception e) {
-					logger.severe("Error reading " + current);
-					e.printStackTrace();
+					logger.severe("Error getting the lyrics for " + current);
 				}
 			} else {
 				logger.warning("Unrecognized file type: " + current);
@@ -62,7 +69,7 @@ public class LibraryExplorer {
 		}
 
 		LibraryExplorer explorer = new LibraryExplorer(
-				"/Users/mariosangiorgio/Music/iTunes/iTunes Media/Music/");
+				"/Users/mariosangiorgio/Music/iTunes/iTunes Media/Music/Friendly Fires");
 		explorer.explore();
 	}
 }
