@@ -44,7 +44,7 @@ public class LibraryExplorer {
 						lyrics = crawler.getLyrics(artist, title);
 						tag.setField(FieldKey.LYRICS, lyrics);
 						audioFile.commit();
-						logger.info("Lyrics found for "+title+" by "+artist);
+						System.out.println("Lyrics found for "+title+" by "+artist);
 					}
 				} catch (Exception e) {
 					logger.severe("Error getting the lyrics for " + current);
@@ -67,9 +67,10 @@ public class LibraryExplorer {
 		for (String loggerName : loggers) {
 			Logger.getLogger(loggerName).setLevel(Level.OFF);
 		}
+		logger.setLevel(Level.OFF);
 
 		LibraryExplorer explorer = new LibraryExplorer(
-				"/Users/mariosangiorgio/Music/iTunes/iTunes Media/Music/Friendly Fires");
+				"/Users/mariosangiorgio/Music/iTunes/iTunes Media/Music/");
 		explorer.explore();
 	}
 }
