@@ -45,6 +45,7 @@ public class SongLyricsCrawler extends Crawler {
 			throws LyricsNotFoundException {
 		String contentAddress = "/" + author + "/" + title + "-lyrics/";
 		contentAddress = contentAddress.replace(" ", "-");
+		contentAddress = encodeSpecialCharacters(contentAddress);
 
 		try {
 			String content = downloader.getPage(host, contentAddress);

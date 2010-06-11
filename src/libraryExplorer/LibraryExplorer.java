@@ -1,7 +1,6 @@
 package libraryExplorer;
 
 import java.io.File;
-import java.util.Collection;
 import java.util.Vector;
 import java.util.logging.Logger;
 

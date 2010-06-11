@@ -32,6 +32,21 @@ public abstract class Crawler {
 	protected abstract String search(String author, String title)
 			throws LyricsNotFoundException;
 
+	protected String encodeSpecialCharacters(String plainString){
+		plainString = plainString.replace("$", "%24");
+		plainString = plainString.replace("&", "%26");
+		plainString = plainString.replace("+", "%2B");
+		plainString = plainString.replace(",", "%2C");
+		plainString = plainString.replace("/", "%2F");
+		plainString = plainString.replace("$", "%24");
+		plainString = plainString.replace(":", "%3A");
+		plainString = plainString.replace(";", "%3B");
+		plainString = plainString.replace("=", "%3D");
+		plainString = plainString.replace("?", "%3F");
+		plainString = plainString.replace("@", "%40");
+		return plainString;
+	}
+	
 	protected String decodeHTML(String encodedString) {
 		StringBuffer ostr = new StringBuffer();
 		int i1 = 0;
