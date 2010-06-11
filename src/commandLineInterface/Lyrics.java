@@ -1,4 +1,4 @@
-package Application;
+package commandLineInterface;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
