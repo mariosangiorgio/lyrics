@@ -16,12 +16,10 @@ public class MetroLyricsCrawler extends Crawler {
 
 	public MetroLyricsCrawler() {
 		super();
-		host = new HttpHost("www.metrolyrics.com");
 	}
 
 	public MetroLyricsCrawler(String proxyHostname, int proxyPort) {
-		super(proxyHostname,proxyPort);
-		host = new HttpHost("www.metrolyrics.com");
+		super();
 	}
 
 	@Override
@@ -45,47 +43,6 @@ public class MetroLyricsCrawler extends Crawler {
 		throw new LyricsNotFoundException();
 	}
 
-	private String decodeHTML(String encodedString) {
-		StringBuffer ostr = new StringBuffer();
-		int i1 = 0;
-		int i2 = 0;
-		while (i2 < encodedString.length()) {
-			i1 = encodedString.indexOf("&", i2);
-			if (i1 == -1) {
-				ostr
-						.append(encodedString.substring(i2, encodedString
-								.length()));
-				break;
-			}
-			ostr.append(encodedString.substring(i2, i1));
-			i2 = encodedString.indexOf(";", i1);
-			if (i2 == -1) {
-				ostr
-						.append(encodedString.substring(i1, encodedString
-								.length()));
-				break;
-			}
-
-			String tok = encodedString.substring(i1 + 1, i2);
-			if (tok.charAt(0) == '#') {
-				tok = tok.substring(1);
-				try {
-					int radix = 10;
-					if (tok.trim().charAt(0) == 'x') {
-						radix = 16;
-						tok = tok.substring(1, tok.length());
-					}
-					ostr.append((char) Integer.parseInt(tok, radix));
-				} catch (NumberFormatException exp) {
-					ostr.append('?');
-				}
-			}
-			i2++;
-		}
-		return ostr.toString();
-
-	}
-
 	@Override
 	protected String getLyrics(String address) throws LyricsNotFoundException {
 		try {
@@ -104,5 +61,10 @@ public class MetroLyricsCrawler extends Crawler {
 			e.printStackTrace();
 		}
 		throw new LyricsNotFoundException();
+	}
+
+	@Override
+	protected void setHostAddress() {
+		host = new HttpHost("www.metrolyrics.com");
 	}
 }

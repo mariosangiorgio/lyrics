@@ -14,8 +14,7 @@ public class Lyrics {
 		}
 
 		LibraryExplorer explorer = new LibraryExplorer(
-				"/Users/mariosangiorgio/Music/iTunes/iTunes Media/Music/",
-				"proxy.polimi.it",8080,true);
+				"/Users/mariosangiorgio/Music/iTunes/iTunes Media/Music");
 		explorer.explore();
 	}
 }

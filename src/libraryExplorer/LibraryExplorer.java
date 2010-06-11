@@ -1,7 +1,8 @@
 package libraryExplorer;
 
 import java.io.File;
-import java.util.logging.Level;
+import java.util.Collection;
+import java.util.Vector;
 import java.util.logging.Logger;
 
 import org.jaudiotagger.audio.AudioFile;
@@ -10,31 +11,36 @@ import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.Tag;
 
 import crawler.Crawler;
+import crawler.LyricsNotFoundException;
 import crawler.MetroLyricsCrawler;
+import crawler.SongLyricsCrawler;
 
 public class LibraryExplorer {
 	private static Logger logger = Logger.getLogger("LibraryExplorer");
 	private String path;
-	private Crawler crawler;
+	private Vector<Crawler> crawlers = new Vector<Crawler>();
 	private boolean override = false;
 
 	public LibraryExplorer(String path) {
 		this.path = path;
-		crawler = new MetroLyricsCrawler();
+		crawlers.add(new MetroLyricsCrawler());
+		crawlers.add(new SongLyricsCrawler());
 	}
-	
+
 	public LibraryExplorer(String path, String proxyHostname, int proxyPort) {
 		this.path = path;
-		crawler = new MetroLyricsCrawler(proxyHostname,proxyPort);
+		crawlers.add(new MetroLyricsCrawler(proxyHostname, proxyPort));
+		crawlers.add(new SongLyricsCrawler(proxyHostname, proxyPort));
 	}
-	
-	public LibraryExplorer(String path, boolean override){
+
+	public LibraryExplorer(String path, boolean override) {
 		this(path);
 		this.override = override;
 	}
-	
-	public LibraryExplorer(String path, String proxyHostname, int proxyPort, boolean override) {
-		this(path,proxyHostname,proxyPort);
+
+	public LibraryExplorer(String path, String proxyHostname, int proxyPort,
+			boolean override) {
+		this(path, proxyHostname, proxyPort);
 		this.override = override;
 	}
 
@@ -54,19 +60,36 @@ public class LibraryExplorer {
 								+ " doesn't have any tag");
 					}
 					String lyrics = tag.getFirst(FieldKey.LYRICS);
-					if(lyrics.equals("")){
-						String artist = tag.getFirst(FieldKey.ARTIST);
-						String title = tag.getFirst(FieldKey.TITLE);
-						logger.info("Missing lyrics for "+title+" by "+artist+" ("+current+")");
-						lyrics = crawler.getLyrics(artist, title);
+
+					// This option is used when we want to override the lyrics
+					// in order to fix their format
+					if (override == true) {
 						tag.setField(FieldKey.LYRICS, lyrics);
 						audioFile.commit();
-						System.out.println("Lyrics found for "+title+" by "+artist);
 					}
-					else{
-						if(override == true){
-							tag.setField(FieldKey.LYRICS,lyrics);
-							audioFile.commit();
+
+					// We want to look for the lyrics in the web
+					else {
+						int selectedCrawler = 0;
+						while (lyrics.equals("")) {
+							String artist = tag.getFirst(FieldKey.ARTIST);
+							String title = tag.getFirst(FieldKey.TITLE);
+							logger.info("Missing lyrics for " + title + " by "
+									+ artist + " (" + current + ")");
+							try {
+								Crawler crawler = crawlers
+										.elementAt(selectedCrawler);
+								lyrics = crawler.getLyrics(artist, title);
+								tag.setField(FieldKey.LYRICS, lyrics);
+								audioFile.commit();
+								System.out.println("Lyrics found for " + title
+										+ " by " + artist);
+							} catch (LyricsNotFoundException e) {
+								selectedCrawler++;
+								if(selectedCrawler > crawlers.size()){
+									continue;
+								}
+							}
 						}
 					}
 				} catch (Exception e) {
