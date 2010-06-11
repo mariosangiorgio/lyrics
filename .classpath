@@ -6,5 +6,6 @@
 	<classpathentry kind="lib" path="libraries/httpclient-4.0.1.jar"/>
 	<classpathentry kind="lib" path="libraries/httpcore-4.0.1.jar"/>
 	<classpathentry kind="lib" path="libraries/commons-logging-1.1.1.jar"/>
+	<classpathentry kind="lib" path="libraries/java-getopt-1.0.13.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
