@@ -12,6 +12,11 @@ public abstract class Crawler {
 		downloader = new ContentDownloader();
 	}
 	
+	public Crawler(String proxyHostname, int proxyPort) {
+		downloader = new ContentDownloader();
+		downloader.setupProxy(proxyHostname, proxyPort);
+	}
+
 	public String getLyrics(String author, String title) throws LyricsNotFoundException {
 		String address = search(author, title);
 		return getLyrics(address);

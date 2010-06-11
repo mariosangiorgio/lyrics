@@ -15,9 +15,27 @@ import crawler.MetroLyricsCrawler;
 public class LibraryExplorer {
 	private static Logger logger = Logger.getLogger("LibraryExplorer");
 	private String path;
+	private Crawler crawler;
+	private boolean override = false;
 
 	public LibraryExplorer(String path) {
 		this.path = path;
+		crawler = new MetroLyricsCrawler();
+	}
+	
+	public LibraryExplorer(String path, String proxyHostname, int proxyPort) {
+		this.path = path;
+		crawler = new MetroLyricsCrawler(proxyHostname,proxyPort);
+	}
+	
+	public LibraryExplorer(String path, boolean override){
+		this(path);
+		this.override = override;
+	}
+	
+	public LibraryExplorer(String path, String proxyHostname, int proxyPort, boolean override) {
+		this(path,proxyHostname,proxyPort);
+		this.override = override;
 	}
 
 	public void explore() {
@@ -40,11 +58,16 @@ public class LibraryExplorer {
 						String artist = tag.getFirst(FieldKey.ARTIST);
 						String title = tag.getFirst(FieldKey.TITLE);
 						logger.info("Missing lyrics for "+title+" by "+artist+" ("+current+")");
-						Crawler crawler = new MetroLyricsCrawler();
 						lyrics = crawler.getLyrics(artist, title);
 						tag.setField(FieldKey.LYRICS, lyrics);
 						audioFile.commit();
 						System.out.println("Lyrics found for "+title+" by "+artist);
+					}
+					else{
+						if(override == true){
+							tag.setField(FieldKey.LYRICS,lyrics);
+							audioFile.commit();
+						}
 					}
 				} catch (Exception e) {
 					logger.severe("Error getting the lyrics for " + current);
@@ -59,17 +82,5 @@ public class LibraryExplorer {
 				}
 			}
 		}
-	}
-
-	public static void main(String[] args) {
-		String[] loggers = { "org.jaudiotagger.audio",
-				"org.jaudiotagger.tag.id3", "org.jaudiotagger.tag.datatype" };
-		for (String loggerName : loggers) {
-			Logger.getLogger(loggerName).setLevel(Level.OFF);
-		}
-
-		LibraryExplorer explorer = new LibraryExplorer(
-				"/Users/mariosangiorgio/Music/iTunes/iTunes Media/Music/");
-		explorer.explore();
 	}
 }

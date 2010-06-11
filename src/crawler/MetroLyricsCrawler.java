@@ -19,6 +19,11 @@ public class MetroLyricsCrawler extends Crawler {
 		host = new HttpHost("www.metrolyrics.com");
 	}
 
+	public MetroLyricsCrawler(String proxyHostname, int proxyPort) {
+		super(proxyHostname,proxyPort);
+		host = new HttpHost("www.metrolyrics.com");
+	}
+
 	@Override
 	protected String search(String author, String title)
 			throws LyricsNotFoundException {
