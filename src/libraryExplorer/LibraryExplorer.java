@@ -73,11 +73,10 @@ public class LibraryExplorer {
 						while (lyrics.equals("")) {
 							String artist = tag.getFirst(FieldKey.ARTIST);
 							String title = tag.getFirst(FieldKey.TITLE);
-							logger.info("Missing lyrics for " + title + " by "
-									+ artist + " (" + current + ")");
 							try {
 								Crawler crawler = crawlers
 										.elementAt(selectedCrawler);
+								logger.info("Searching lyrics for "+title+" by "+artist+" with "+crawler.getClass());
 								lyrics = crawler.getLyrics(artist, title);
 								tag.setField(FieldKey.LYRICS, lyrics);
 								audioFile.commit();
