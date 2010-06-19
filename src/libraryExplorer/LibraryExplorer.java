@@ -1,7 +1,6 @@
 package libraryExplorer;
 
 import java.io.File;
-import java.util.Iterator;
 import java.util.Vector;
 import java.util.logging.Logger;
 
@@ -21,7 +20,8 @@ public class LibraryExplorer {
 	private String path;
 	private Vector<Crawler> crawlers = new Vector<Crawler>();
 	private boolean override = false;
-	private AlternateNames alternateNames = AlternateNames.getAlternateNames("/resources/AlternateNames");
+	private AlternateNames alternateNames = AlternateNames
+			.getAlternateNames("/resources/AlternateNames");
 
 	public LibraryExplorer(String path) {
 		this.path = path;
@@ -72,35 +72,23 @@ public class LibraryExplorer {
 
 					// We want to look for the lyrics in the web
 					else {
-						int selectedCrawler = 0;
-						Iterator<String> namesIterator = null;
 						String artist = tag.getFirst(FieldKey.ARTIST);
 						String title = tag.getFirst(FieldKey.TITLE);
-						while (lyrics.equals("")) {
-							try {
-								Crawler crawler = crawlers
-										.elementAt(selectedCrawler);
-								logger.info("Searching lyrics for "+title+" by "+artist+" with "+crawler.getClass());
-								lyrics = crawler.getLyrics(artist, title);
-								tag.setField(FieldKey.LYRICS, lyrics);
-								audioFile.commit();
-								System.out.println("Lyrics found for " + title
-										+ " by " + artist);
-							} catch (LyricsNotFoundException e) {
-								// First I try to lookup for alternate names
-								if(namesIterator == null){
-									namesIterator = alternateNames.getAlternateNameList(artist).iterator();
-								}
-								if(namesIterator.hasNext()){
-									artist = namesIterator.next();
-								}
-								else{
-									artist = tag.getFirst(FieldKey.ARTIST);
-									namesIterator = alternateNames.getAlternateNameList(artist).iterator();
-									selectedCrawler++;
-									if (selectedCrawler > crawlers.size()) {
-										continue;
-									}
+						for (String artistName : alternateNames
+								.getAlternateNameList(artist)) {
+							if(!lyrics.equals("")){
+								break;
+							}
+							for (Crawler crawler : crawlers) {
+								logger.info("Searching lyrics for " + title
+										+ " by " + artistName + " with "
+										+ crawler.getClass());
+								try {
+									lyrics = crawler.getLyrics(artistName, title);
+									tag.setField(FieldKey.LYRICS, lyrics);
+									audioFile.commit();
+									break;
+								} catch (LyricsNotFoundException ex) {
 								}
 							}
 						}

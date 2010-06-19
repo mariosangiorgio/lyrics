@@ -43,15 +43,16 @@ public class AlternateNames {
 		BufferedReader reader;
 		try {
 			URL path = getClass().getResource(filePath);
-			BufferedInputStream stream = (BufferedInputStream) path.getContent();
+			BufferedInputStream stream = (BufferedInputStream) path
+					.getContent();
 			InputStreamReader streamReader = new InputStreamReader(stream);
 			reader = new BufferedReader(streamReader);
-			
+
 			String line;
 			while ((line = reader.readLine()) != null) {
 				String[] tokens = line.split("\t");
 				String artistName = tokens[0];
-				for(int i =1; i< tokens.length; i++){
+				for (int i = 1; i < tokens.length; i++) {
 					addAlternateName(artistName, tokens[i]);
 				}
 			}
@@ -75,10 +76,12 @@ public class AlternateNames {
 	}
 
 	public Collection<String> getAlternateNameList(String artistName) {
+		Collection<String> alternates;
+		alternates = new Vector<String>();
+		alternates.add(artistName);
 		if (names.containsKey(artistName)) {
-			return names.get(artistName);
-		} else {
-			return new Vector<String>();
+			alternates.addAll(names.get(artistName));
 		}
+		return alternates;
 	}
 }
