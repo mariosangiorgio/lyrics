@@ -1,4 +1,6 @@
-/*  
+/*
+ *	Mario Sangiorgio - mariosangiorgio AT gmail DOT com
+ *
  *  This file is part of lyrics.
  * 
  *  lyrics is free software: you can redistribute it and/or modify
