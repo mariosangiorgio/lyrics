@@ -1,6 +1,7 @@
 package libraryExplorer;
 
 import java.io.File;
+import java.util.Iterator;
 import java.util.Vector;
 import java.util.logging.Logger;
 
@@ -9,6 +10,7 @@ import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.Tag;
 
+import utils.AlternateNames;
 import crawler.Crawler;
 import crawler.LyricsNotFoundException;
 import crawler.MetroLyricsCrawler;
@@ -19,6 +21,7 @@ public class LibraryExplorer {
 	private String path;
 	private Vector<Crawler> crawlers = new Vector<Crawler>();
 	private boolean override = false;
+	private AlternateNames alternateNames = AlternateNames.getAlternateNames("/resources/AlternateNames");
 
 	public LibraryExplorer(String path) {
 		this.path = path;
@@ -70,9 +73,10 @@ public class LibraryExplorer {
 					// We want to look for the lyrics in the web
 					else {
 						int selectedCrawler = 0;
+						Iterator<String> namesIterator = null;
+						String artist = tag.getFirst(FieldKey.ARTIST);
+						String title = tag.getFirst(FieldKey.TITLE);
 						while (lyrics.equals("")) {
-							String artist = tag.getFirst(FieldKey.ARTIST);
-							String title = tag.getFirst(FieldKey.TITLE);
 							try {
 								Crawler crawler = crawlers
 										.elementAt(selectedCrawler);
@@ -83,9 +87,20 @@ public class LibraryExplorer {
 								System.out.println("Lyrics found for " + title
 										+ " by " + artist);
 							} catch (LyricsNotFoundException e) {
-								selectedCrawler++;
-								if(selectedCrawler > crawlers.size()){
-									continue;
+								// First I try to lookup for alternate names
+								if(namesIterator == null){
+									namesIterator = alternateNames.getAlternateNameList(artist).iterator();
+								}
+								if(namesIterator.hasNext()){
+									artist = namesIterator.next();
+								}
+								else{
+									artist = tag.getFirst(FieldKey.ARTIST);
+									namesIterator = alternateNames.getAlternateNameList(artist).iterator();
+									selectedCrawler++;
+									if (selectedCrawler > crawlers.size()) {
+										continue;
+									}
 								}
 							}
 						}

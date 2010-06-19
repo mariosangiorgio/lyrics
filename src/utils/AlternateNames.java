@@ -19,8 +19,10 @@
 
 package utils;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
-import java.io.FileReader;
+import java.io.InputStreamReader;
+import java.net.URL;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Vector;
@@ -30,7 +32,7 @@ public class AlternateNames {
 
 	private HashMap<String, Collection<String>> names = new HashMap<String, Collection<String>>();
 
-	public AlternateNames getAlternateNames(String filePath) {
+	public static AlternateNames getAlternateNames(String filePath) {
 		if (alternateNames == null) {
 			alternateNames = new AlternateNames(filePath);
 		}
@@ -40,7 +42,11 @@ public class AlternateNames {
 	private AlternateNames(String filePath) {
 		BufferedReader reader;
 		try {
-			reader = new BufferedReader(new FileReader(filePath));
+			URL path = getClass().getResource(filePath);
+			BufferedInputStream stream = (BufferedInputStream) path.getContent();
+			InputStreamReader streamReader = new InputStreamReader(stream);
+			reader = new BufferedReader(streamReader);
+			
 			String line;
 			while ((line = reader.readLine()) != null) {
 				String[] tokens = line.split("\t");
@@ -49,6 +55,9 @@ public class AlternateNames {
 					addAlternateName(artistName, tokens[i]);
 				}
 			}
+			stream.close();
+			streamReader.close();
+			reader.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
