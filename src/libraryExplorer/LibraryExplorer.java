@@ -26,7 +26,7 @@ public class LibraryExplorer {
 	public LibraryExplorer(String path) {
 		this.path = path;
 		crawlers.add(new MetroLyricsCrawler());
-		// crawlers.add(new SongLyricsCrawler());
+		crawlers.add(new SongLyricsCrawler());
 	}
 
 	public LibraryExplorer(String path, String proxyHostname, int proxyPort) {
