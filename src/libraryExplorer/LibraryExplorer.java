@@ -26,7 +26,7 @@ public class LibraryExplorer {
 	public LibraryExplorer(String path) {
 		this.path = path;
 		crawlers.add(new MetroLyricsCrawler());
-		crawlers.add(new SongLyricsCrawler());
+		// crawlers.add(new SongLyricsCrawler());
 	}
 
 	public LibraryExplorer(String path, String proxyHostname, int proxyPort) {
@@ -76,15 +76,18 @@ public class LibraryExplorer {
 						String title = tag.getFirst(FieldKey.TITLE);
 						for (String artistName : alternateNames
 								.getAlternateNameList(artist)) {
-							if(!lyrics.equals("")){
+
+							if (!lyrics.equals("")) {
 								break;
 							}
+
 							for (Crawler crawler : crawlers) {
 								logger.info("Searching lyrics for " + title
 										+ " by " + artistName + " with "
 										+ crawler.getClass());
 								try {
-									lyrics = crawler.getLyrics(artistName, title);
+									lyrics = crawler.getLyrics(artistName,
+											title);
 									tag.setField(FieldKey.LYRICS, lyrics);
 									audioFile.commit();
 									break;

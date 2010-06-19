@@ -72,10 +72,7 @@ public class SongLyricsCrawler extends Crawler {
 					+ " lyrics at the moment.")) {
 				return contentAddress;
 			}
-		} catch (DownloadException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
 		}
 
 		throw new LyricsNotFoundException();

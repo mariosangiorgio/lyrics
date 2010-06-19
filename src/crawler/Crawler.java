@@ -19,6 +19,9 @@
 
 package crawler;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.apache.http.HttpHost;
 
 import crawler.webClient.ContentDownloader;
@@ -39,7 +42,14 @@ public abstract class Crawler {
 
 	public String getLyrics(String author, String title)
 			throws LyricsNotFoundException {
-		String address = search(author, title);
+		String address;
+		
+		// Removing text in parentheses from the title
+		Pattern textInParentheses = Pattern.compile("\\s*\\([^\\)]*\\)\\s*");
+		Matcher parentesesMatcher = textInParentheses.matcher(title);
+		title = parentesesMatcher.replaceAll("");
+
+		address = search(author, title);
 		return getLyrics(address);
 	}
 
@@ -51,7 +61,7 @@ public abstract class Crawler {
 	protected abstract String search(String author, String title)
 			throws LyricsNotFoundException;
 
-	protected String encodeSpecialCharacters(String plainString){
+	protected String encodeSpecialCharacters(String plainString) {
 		plainString = plainString.replace("$", "%24");
 		plainString = plainString.replace("&", "%26");
 		plainString = plainString.replace("+", "%2B");
@@ -65,7 +75,7 @@ public abstract class Crawler {
 		plainString = plainString.replace("@", "%40");
 		return plainString;
 	}
-	
+
 	protected String decodeHTML(String encodedString) {
 		StringBuffer ostr = new StringBuffer();
 		int i1 = 0;
