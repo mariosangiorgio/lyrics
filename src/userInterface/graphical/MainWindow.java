@@ -19,6 +19,7 @@
 
 package userInterface.graphical;
 
+import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -28,10 +29,11 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextPane;
 
 import libraryExplorer.LibraryExplorer;
 import libraryExplorer.OutputListener;
-
 import userInterface.graphical.listeners.FileChooserListener;
 import userInterface.graphical.listeners.MacOSXKeyListener;
 
@@ -42,33 +44,48 @@ public class MainWindow extends JFrame implements OutputListener {
 	private File libraryLocation;
 
 	// Components
+	private JPanel menuPanel;
 	private JLabel libraryLabel, fixLibraryLabel;
 	private JButton chooseLocationButton, goButton;
 	private JCheckBox fixCheckBox;
+	private JTextPane text;
 
 	public MainWindow() {
 		super("Lyrics");
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		getContentPane().setLayout(new GridLayout(3, 2));
-
+		getContentPane().setLayout(new BorderLayout());
+		
+		initializeComponents();
+		addComponents();
+		addListeners();
+		
+		getContentPane().add(menuPanel,BorderLayout.NORTH);
+		getContentPane().add(text,BorderLayout.SOUTH);
+		
+		pack();
+	}
+	
+	private void initializeComponents(){
+		menuPanel = new JPanel();
+		menuPanel.setLayout(new GridLayout(3, 2));
+		
+		text = new JTextPane();
+		text.setEditable(false);
+		
 		libraryLabel = new JLabel("Library location:");
 		chooseLocationButton = new JButton("Choose location");
 		fixLibraryLabel = new JLabel("Fix libraries:");
 		fixCheckBox = new JCheckBox();
 		goButton = new JButton("Go!");
-
-		addComponents();
-		addListeners();
 	}
 
 	private void addComponents() {
-		getContentPane().add(libraryLabel);
-		getContentPane().add(chooseLocationButton);
-		getContentPane().add(fixLibraryLabel);
-		getContentPane().add(fixCheckBox);
-		getContentPane().add(goButton);
-
-		pack();
+		menuPanel.add(libraryLabel);
+		menuPanel.add(chooseLocationButton);
+		menuPanel.add(fixLibraryLabel);
+		menuPanel.add(fixCheckBox);
+		menuPanel.add(goButton);
+		menuPanel.add(text);
 	}
 
 	private void addListeners() {
@@ -114,6 +131,7 @@ public class MainWindow extends JFrame implements OutputListener {
 		fixLibraryLabel.addKeyListener(listener);
 		fixCheckBox.addKeyListener(listener);
 		goButton.addKeyListener(listener);
+		text.addKeyListener(listener);
 	}
 
 	public void changeLabel(String newLabel) {
@@ -136,11 +154,13 @@ public class MainWindow extends JFrame implements OutputListener {
 
 	@Override
 	public void displaySuccessfulOperation(String message) {
-		// TODO: Implement
+		text.setText(message+"\n"+text.getText());
+		repaint();
 	}
 
 	@Override
 	public void displayUnsuccessfulOperation(String message) {
-		// TODO: Implement
+		text.setText(message+"\n"+text.getText());
+		repaint();
 	}
 }
