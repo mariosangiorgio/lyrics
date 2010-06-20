@@ -17,8 +17,6 @@
  *  along with lyrics.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-// TODO: make it threaded!
-
 package userInterface.graphical;
 
 import java.awt.BorderLayout;
@@ -53,6 +51,7 @@ public class MainWindow extends JFrame implements OutputListener {
 	private JButton chooseLocationButton, goButton;
 	private JCheckBox fixCheckBox;
 	private JTextArea text;
+	private LibraryExplorer libraryExplorer;
 
 	public MainWindow() {
 		super("Lyrics");
@@ -155,12 +154,18 @@ public class MainWindow extends JFrame implements OutputListener {
 	}
 
 	private void run() {
-		LibraryExplorer libraryExplorer;
 		libraryExplorer = new LibraryExplorer(libraryLocation.toString(),
 				fixCheckBox.isSelected());
 		libraryExplorer.addOutputListener(this);
 
-		libraryExplorer.explore();
+		Runnable runnable = new Runnable() {
+
+			@Override
+			public void run() {
+				libraryExplorer.explore();
+			}
+		};
+		(new Thread(runnable)).start();
 	}
 
 	@Override
