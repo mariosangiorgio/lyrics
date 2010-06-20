@@ -17,9 +17,12 @@
  *  along with lyrics.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+// TODO: make it threaded!
+
 package userInterface.graphical;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -30,7 +33,8 @@ import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextPane;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 
 import libraryExplorer.LibraryExplorer;
 import libraryExplorer.OutputListener;
@@ -48,30 +52,38 @@ public class MainWindow extends JFrame implements OutputListener {
 	private JLabel libraryLabel, fixLibraryLabel;
 	private JButton chooseLocationButton, goButton;
 	private JCheckBox fixCheckBox;
-	private JTextPane text;
+	private JTextArea text;
 
 	public MainWindow() {
 		super("Lyrics");
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		getContentPane().setLayout(new BorderLayout());
-		
+
 		initializeComponents();
 		addComponents();
 		addListeners();
-		
-		getContentPane().add(menuPanel,BorderLayout.NORTH);
-		getContentPane().add(text,BorderLayout.SOUTH);
-		
+
+		JScrollPane scrollPane = new JScrollPane(text);
+
+		scrollPane
+				.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		scrollPane
+				.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+		scrollPane.setPreferredSize(new Dimension(300, 300));
+
+		getContentPane().add(menuPanel, BorderLayout.NORTH);
+		getContentPane().add(scrollPane, BorderLayout.SOUTH);
+
 		pack();
 	}
-	
-	private void initializeComponents(){
+
+	private void initializeComponents() {
 		menuPanel = new JPanel();
 		menuPanel.setLayout(new GridLayout(3, 2));
-		
-		text = new JTextPane();
+
+		text = new JTextArea();
 		text.setEditable(false);
-		
+
 		libraryLabel = new JLabel("Library location:");
 		chooseLocationButton = new JButton("Choose location");
 		fixLibraryLabel = new JLabel("Fix libraries:");
@@ -85,7 +97,6 @@ public class MainWindow extends JFrame implements OutputListener {
 		menuPanel.add(fixLibraryLabel);
 		menuPanel.add(fixCheckBox);
 		menuPanel.add(goButton);
-		menuPanel.add(text);
 	}
 
 	private void addListeners() {
@@ -154,13 +165,21 @@ public class MainWindow extends JFrame implements OutputListener {
 
 	@Override
 	public void displaySuccessfulOperation(String message) {
-		text.setText(message+"\n"+text.getText());
+		if (text.getText().equals("")) {
+			text.setText(message);
+		} else {
+			text.setText(text.getText() + "\n" + message);
+		}
 		repaint();
 	}
 
 	@Override
 	public void displayUnsuccessfulOperation(String message) {
-		text.setText(message+"\n"+text.getText());
+		if (text.getText().equals("")) {
+			text.setText(message);
+		} else {
+			text.setText(text.getText() + "\n" + message);
+		}
 		repaint();
 	}
 }
