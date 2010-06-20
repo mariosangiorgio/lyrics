@@ -17,7 +17,7 @@
  *  along with lyrics.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package commandLineInterface;
+package userInterface.commandLine;
 
 import gnu.getopt.Getopt;
 import gnu.getopt.LongOpt;
