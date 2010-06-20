@@ -26,20 +26,48 @@ import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
-public class MainWindow extends JFrame{
+public class MainWindow extends JFrame {
 	private static final long serialVersionUID = 7216505715440605172L;
-	
+
+	// Components
+	JLabel libraryLabel, fixLibraryLabel;
+	JButton chooseLocationButton, goButton;
+	JCheckBox fixCheckBox;
+
 	public MainWindow() {
 		super("Lyrics");
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		getContentPane().setLayout(new GridLayout(3,2));
-		
-		getContentPane().add(new JLabel("Library location:"));
-		getContentPane().add(new JButton("Choose location"));
-		getContentPane().add(new JLabel("Fix libraries:"));
-		getContentPane().add(new JCheckBox());
-		getContentPane().add(new JButton("Go!"));
-		
+		getContentPane().setLayout(new GridLayout(3, 2));
+
+		libraryLabel = new JLabel("Library location:");
+		chooseLocationButton = new JButton("Choose location");
+		fixLibraryLabel = new JLabel("Fix libraries:");
+		fixCheckBox = new JCheckBox();
+		goButton = new JButton("Go!");
+
+		getContentPane().add(libraryLabel);
+		getContentPane().add(chooseLocationButton);
+		getContentPane().add(fixLibraryLabel);
+		getContentPane().add(fixCheckBox);
+		getContentPane().add(goButton);
+
+		addListeners();
+
 		pack();
+	}
+
+	private void addListeners() {
+		MacOSXKeyListener listener = new MacOSXKeyListener(this);
+		addKeyListener(listener);
+		libraryLabel.addKeyListener(listener);
+		chooseLocationButton.addKeyListener(listener);
+		fixLibraryLabel.addKeyListener(listener);
+		fixCheckBox.addKeyListener(listener);
+		goButton.addKeyListener(listener);
+	}
+
+	public void changeLabel(String newLabel) {
+		libraryLabel.setText(newLabel);
+		repaint();
 	}
 }
