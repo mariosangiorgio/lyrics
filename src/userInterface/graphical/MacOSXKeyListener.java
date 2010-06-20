@@ -31,7 +31,7 @@ public class MacOSXKeyListener implements KeyListener {
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-		if(e.isMetaDown() && e.getKeyChar()=='w'){
+		if(e.isMetaDown() && (e.getKeyChar()=='w' || e.getKeyChar()=='W')){
 			frame.dispose();
 		}
 	}
