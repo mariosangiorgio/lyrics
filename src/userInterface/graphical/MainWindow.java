@@ -20,6 +20,8 @@
 package userInterface.graphical;
 
 import java.awt.GridLayout;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.File;
 
 import javax.swing.JButton;
@@ -27,10 +29,13 @@ import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
+import libraryExplorer.LibraryExplorer;
+import libraryExplorer.OutputListener;
+
 import userInterface.graphical.listeners.FileChooserListener;
 import userInterface.graphical.listeners.MacOSXKeyListener;
 
-public class MainWindow extends JFrame {
+public class MainWindow extends JFrame implements OutputListener {
 	private static final long serialVersionUID = 7216505715440605172L;
 
 	// Parameters
@@ -67,6 +72,38 @@ public class MainWindow extends JFrame {
 	}
 
 	private void addListeners() {
+		goButton.addMouseListener(new MouseListener() {
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				run();
+			}
+		});
+
 		chooseLocationButton.addMouseListener(new FileChooserListener(this));
 
 		// Listener for the system key chords
@@ -86,5 +123,24 @@ public class MainWindow extends JFrame {
 
 	public void setLibraryLocation(File libraryLocation) {
 		this.libraryLocation = libraryLocation;
+	}
+
+	private void run() {
+		LibraryExplorer libraryExplorer;
+		libraryExplorer = new LibraryExplorer(libraryLocation.toString(),
+				fixCheckBox.isSelected());
+		libraryExplorer.addOutputListener(this);
+
+		libraryExplorer.explore();
+	}
+
+	@Override
+	public void displaySuccessfulOperation(String message) {
+		// TODO: Implement
+	}
+
+	@Override
+	public void displayUnsuccessfulOperation(String message) {
+		// TODO: Implement
 	}
 }

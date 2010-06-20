@@ -19,10 +19,20 @@
 
 package userInterface.graphical;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import javax.swing.JFrame;
 
 public class Lyrics {
 	public static void main(String[] args) {
+		// Suppressing jaudiotagger loggers
+		String[] loggers = { "org.jaudiotagger.audio",
+				"org.jaudiotagger.tag.id3", "org.jaudiotagger.tag.datatype" };
+		for (String loggerName : loggers) {
+			Logger.getLogger(loggerName).setLevel(Level.OFF);
+		}
+		
 		JFrame.setDefaultLookAndFeelDecorated(true);
 		JFrame mainWindow = new MainWindow();
 		mainWindow.setVisible(true);

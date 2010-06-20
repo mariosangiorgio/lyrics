@@ -1,6 +1,7 @@
 package libraryExplorer;
 
 import java.io.File;
+import java.util.Collection;
 import java.util.Vector;
 import java.util.logging.Logger;
 
@@ -22,6 +23,8 @@ public class LibraryExplorer {
 	private boolean override = false;
 	private AlternateNames alternateNames = AlternateNames
 			.getAlternateNames("/resources/AlternateNames");
+
+	private Collection<OutputListener> outputListeners = new Vector<OutputListener>();
 
 	public LibraryExplorer(String path) {
 		this.path = path;
@@ -90,10 +93,14 @@ public class LibraryExplorer {
 											title);
 									tag.setField(FieldKey.LYRICS, lyrics);
 									audioFile.commit();
+									notifySuccess(artist, title);
 									break;
 								} catch (LyricsNotFoundException ex) {
 								}
 							}
+						}
+						if (lyrics.equals("")) {
+							notifyFailure(artist, title);
 						}
 					}
 				} catch (Exception e) {
@@ -109,5 +116,23 @@ public class LibraryExplorer {
 				}
 			}
 		}
+	}
+
+	private void notifySuccess(String artist, String title) {
+		for (OutputListener listener : outputListeners) {
+			listener.displaySuccessfulOperation("Lyrics found for " + title
+					+ " by " + artist);
+		}
+	}
+
+	private void notifyFailure(String artist, String title) {
+		for (OutputListener listener : outputListeners) {
+			listener.displayUnsuccessfulOperation("Lyrics not found for "
+					+ title + " by " + artist);
+		}
+	}
+	
+	public void addOutputListener(OutputListener outputListener){
+		outputListeners.add(outputListener);
 	}
 }
