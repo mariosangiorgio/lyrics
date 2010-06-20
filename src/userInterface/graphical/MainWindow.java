@@ -20,19 +20,26 @@
 package userInterface.graphical;
 
 import java.awt.GridLayout;
+import java.io.File;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
+import userInterface.graphical.listeners.FileChooserListener;
+import userInterface.graphical.listeners.MacOSXKeyListener;
+
 public class MainWindow extends JFrame {
 	private static final long serialVersionUID = 7216505715440605172L;
 
+	// Parameters
+	private File libraryLocation;
+
 	// Components
-	JLabel libraryLabel, fixLibraryLabel;
-	JButton chooseLocationButton, goButton;
-	JCheckBox fixCheckBox;
+	private JLabel libraryLabel, fixLibraryLabel;
+	private JButton chooseLocationButton, goButton;
+	private JCheckBox fixCheckBox;
 
 	public MainWindow() {
 		super("Lyrics");
@@ -45,18 +52,24 @@ public class MainWindow extends JFrame {
 		fixCheckBox = new JCheckBox();
 		goButton = new JButton("Go!");
 
+		addComponents();
+		addListeners();
+	}
+
+	private void addComponents() {
 		getContentPane().add(libraryLabel);
 		getContentPane().add(chooseLocationButton);
 		getContentPane().add(fixLibraryLabel);
 		getContentPane().add(fixCheckBox);
 		getContentPane().add(goButton);
 
-		addListeners();
-
 		pack();
 	}
 
 	private void addListeners() {
+		chooseLocationButton.addMouseListener(new FileChooserListener(this));
+
+		// Listener for the system key chords
 		MacOSXKeyListener listener = new MacOSXKeyListener(this);
 		addKeyListener(listener);
 		libraryLabel.addKeyListener(listener);
@@ -69,5 +82,9 @@ public class MainWindow extends JFrame {
 	public void changeLabel(String newLabel) {
 		libraryLabel.setText(newLabel);
 		repaint();
+	}
+
+	public void setLibraryLocation(File libraryLocation) {
+		this.libraryLocation = libraryLocation;
 	}
 }

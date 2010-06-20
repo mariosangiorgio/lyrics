@@ -17,10 +17,12 @@
  *  along with lyrics.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package userInterface.graphical;
+package userInterface.graphical.listeners;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+
+import userInterface.graphical.MainWindow;
 
 public class MacOSXKeyListener implements KeyListener {
 	private MainWindow frame;
