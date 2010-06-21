@@ -35,10 +35,12 @@ public class MetroLyricsCrawler extends Crawler {
 
 	public MetroLyricsCrawler() {
 		super();
+		host = new HttpHost("www.metrolyrics.com");
 	}
 
 	public MetroLyricsCrawler(String proxyHostname, int proxyPort) {
 		super();
+		host = new HttpHost("www.metrolyrics.com");
 	}
 
 	@Override
@@ -80,10 +82,5 @@ public class MetroLyricsCrawler extends Crawler {
 			e.printStackTrace();
 		}
 		throw new LyricsNotFoundException();
-	}
-
-	@Override
-	protected void setHostAddress() {
-		host = new HttpHost("www.metrolyrics.com");
 	}
 }

@@ -26,24 +26,60 @@ import org.apache.http.HttpHost;
 
 import crawler.webClient.ContentDownloader;
 
+/**
+ * Abstract class that defines the behavior of a lyrics crawler. All the
+ * site-specific crawlers have to implement it
+ * 
+ * @author mariosangiorgio
+ * 
+ */
 public abstract class Crawler {
+	/**
+	 * The object that is in charge of downloading the pages from the web
+	 */
 	protected ContentDownloader downloader;
+	/**
+	 * The host where the crawler has to search for the lyrics
+	 */
 	protected HttpHost host;
 
+	/**
+	 * Initializes the crawler with a new downloader. Please note that the
+	 * subclasses will have to redefine it, adding the host definition.
+	 */
 	public Crawler() {
 		downloader = new ContentDownloader();
-		setHostAddress();
 	}
 
+	/**
+	 * Initializes the crawler with the specified proxy settings. Please note
+	 * that the subclasses will have to redefine it, adding the host definition.
+	 * 
+	 * @param proxyHostname
+	 *            is the address of the proxy
+	 * @param proxyPort
+	 *            is the port of the proxy
+	 */
 	public Crawler(String proxyHostname, int proxyPort) {
 		this();
 		downloader.setupProxy(proxyHostname, proxyPort);
 	}
 
+	/**
+	 * Searches on the web for the lyrics and returns them (If found)
+	 * 
+	 * @param author
+	 *            is the author of the song
+	 * @param title
+	 *            is the title of the song
+	 * @return is the lyrics of the song
+	 * @throws LyricsNotFoundException
+	 *             when the website can't provide the lyrics
+	 */
 	public String getLyrics(String author, String title)
 			throws LyricsNotFoundException {
 		String address;
-		
+
 		// Removing text in parentheses from the title
 		Pattern textInParentheses = Pattern.compile("\\s*\\([^\\)]*\\)\\s*");
 		Matcher parentesesMatcher = textInParentheses.matcher(title);
@@ -53,14 +89,39 @@ public abstract class Crawler {
 		return getLyrics(address);
 	}
 
-	protected abstract void setHostAddress();
-
+	/**
+	 * Method that will actually download the lyrics
+	 * 
+	 * @param address
+	 *            the address of the page that contains teh lyricss
+	 * @return the lyrics found at the specified address
+	 * @throws LyricsNotFoundException
+	 *             if the specified page does not contain any lyrics
+	 */
 	protected abstract String getLyrics(String address)
 			throws LyricsNotFoundException;
 
+	/**
+	 * Method to retrieve the address of the page containing the lyrics
+	 * 
+	 * @param author
+	 *            the author of the song
+	 * @param title
+	 *            the title of the song
+	 * @return the address of the page containing the lyrics
+	 * @throws LyricsNotFoundException
+	 *             if the crawler is not able to find the address
+	 */
 	protected abstract String search(String author, String title)
 			throws LyricsNotFoundException;
 
+	/**
+	 * An utility method to make the song artist name and title HTTP friendly
+	 * 
+	 * @param plainString
+	 *            the string to encode
+	 * @return the encoded version of the string
+	 */
 	protected String encodeSpecialCharacters(String plainString) {
 		plainString = plainString.replace("$", "%24");
 		plainString = plainString.replace("&", "%26");
@@ -76,6 +137,13 @@ public abstract class Crawler {
 		return plainString;
 	}
 
+	/**
+	 * Method to decode HTML encoding that sometimes prevent the user to copy
+	 * and paste the lyrics
+	 * 
+	 * @param encodedString the HTML-encoded strings
+	 * @return the decoded version of the string
+	 */
 	protected String decodeHTML(String encodedString) {
 		StringBuffer ostr = new StringBuffer();
 		int i1 = 0;

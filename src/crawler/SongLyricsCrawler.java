@@ -33,10 +33,12 @@ public class SongLyricsCrawler extends Crawler {
 
 	public SongLyricsCrawler() {
 		super();
+		host = new HttpHost("www.songlyrics.com");
 	}
 
 	public SongLyricsCrawler(String proxyHostname, int proxyPort) {
 		super();
+		host = new HttpHost("www.songlyrics.com");
 	}
 
 	@Override
@@ -78,10 +80,4 @@ public class SongLyricsCrawler extends Crawler {
 		throw new LyricsNotFoundException();
 
 	}
-
-	@Override
-	protected void setHostAddress() {
-		host = new HttpHost("www.songlyrics.com");
-	}
-
 }
