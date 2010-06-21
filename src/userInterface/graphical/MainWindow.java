@@ -50,7 +50,7 @@ public class MainWindow extends JFrame implements OutputListener {
 	private JLabel libraryLabel, fixLibraryLabel;
 	private JButton chooseLocationButton, goButton;
 	private JCheckBox fixCheckBox;
-	private JTextArea text;
+	private JTextArea messageBox;
 	private LibraryExplorer libraryExplorer;
 
 	public MainWindow() {
@@ -62,7 +62,7 @@ public class MainWindow extends JFrame implements OutputListener {
 		addComponents();
 		addListeners();
 
-		JScrollPane scrollPane = new JScrollPane(text);
+		JScrollPane scrollPane = new JScrollPane(messageBox);
 
 		scrollPane
 				.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
@@ -80,8 +80,8 @@ public class MainWindow extends JFrame implements OutputListener {
 		menuPanel = new JPanel();
 		menuPanel.setLayout(new GridLayout(3, 2));
 
-		text = new JTextArea();
-		text.setEditable(false);
+		messageBox = new JTextArea();
+		messageBox.setEditable(false);
 
 		libraryLabel = new JLabel("Library location:");
 		chooseLocationButton = new JButton("Choose location");
@@ -141,7 +141,7 @@ public class MainWindow extends JFrame implements OutputListener {
 		fixLibraryLabel.addKeyListener(listener);
 		fixCheckBox.addKeyListener(listener);
 		goButton.addKeyListener(listener);
-		text.addKeyListener(listener);
+		messageBox.addKeyListener(listener);
 	}
 
 	public void changeLabel(String newLabel) {
@@ -154,36 +154,40 @@ public class MainWindow extends JFrame implements OutputListener {
 	}
 
 	private void run() {
-		libraryExplorer = new LibraryExplorer(libraryLocation.toString(),
-				fixCheckBox.isSelected());
-		libraryExplorer.addOutputListener(this);
+		if (libraryLocation != null) {
+			libraryExplorer = new LibraryExplorer(libraryLocation.toString(),
+					fixCheckBox.isSelected());
+			libraryExplorer.addOutputListener(this);
 
-		Runnable runnable = new Runnable() {
+			Runnable runnable = new Runnable() {
 
-			@Override
-			public void run() {
-				libraryExplorer.explore();
-			}
-		};
-		(new Thread(runnable)).start();
+				@Override
+				public void run() {
+					libraryExplorer.explore();
+				}
+			};
+			(new Thread(runnable)).start();
+		} else {
+			displayUnsuccessfulOperation("Please choose the library location");
+		}
 	}
 
 	@Override
 	public void displaySuccessfulOperation(String message) {
-		if (text.getText().equals("")) {
-			text.setText(message);
+		if (messageBox.getText().equals("")) {
+			messageBox.setText(message);
 		} else {
-			text.setText(text.getText() + "\n" + message);
+			messageBox.setText(messageBox.getText() + "\n" + message);
 		}
 		repaint();
 	}
 
 	@Override
 	public void displayUnsuccessfulOperation(String message) {
-		if (text.getText().equals("")) {
-			text.setText(message);
+		if (messageBox.getText().equals("")) {
+			messageBox.setText(message);
 		} else {
-			text.setText(text.getText() + "\n" + message);
+			messageBox.setText(messageBox.getText() + "\n" + message);
 		}
 		repaint();
 	}
