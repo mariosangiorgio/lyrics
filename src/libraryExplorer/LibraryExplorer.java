@@ -50,6 +50,10 @@ public class LibraryExplorer {
 	private AlternateNames alternateNames = AlternateNames
 			.getAlternateNames("/resources/AlternateNames");
 
+	private String[] badSentences = {
+			"Unfortunately, we are not licensed to display the full lyrics for this song at the moment.",
+			"Impossibile trovare testo: nel titolo del brano sono presenti caratteri non-ASCII." };
+
 	private Collection<OutputListener> outputListeners = new Vector<OutputListener>();
 
 	/**
@@ -160,7 +164,7 @@ public class LibraryExplorer {
 						for (String artistName : alternateNames
 								.getAlternateNameList(artist)) {
 
-							if (!lyrics.equals("")) {
+							if (lyricsAlreadyInTheFile(lyrics)) {
 								break;
 							}
 
@@ -179,7 +183,7 @@ public class LibraryExplorer {
 								}
 							}
 						}
-						if (lyrics.equals("")) {
+						if (!lyricsAlreadyInTheFile(lyrics)) {
 							notifyFailure(artist, title);
 						}
 					}
@@ -196,6 +200,17 @@ public class LibraryExplorer {
 				}
 			}
 		}
+	}
+
+	private boolean lyricsAlreadyInTheFile(String lyrics) {
+		if (lyrics.equals(""))
+			return false;
+		for (String sentence : badSentences) {
+			if (lyrics.contains(sentence)) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	private void notifySuccess(String artist, String title) {
