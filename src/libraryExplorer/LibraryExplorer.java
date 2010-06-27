@@ -76,7 +76,7 @@ public class LibraryExplorer {
 	private void loadBadSentences() {
 		badSentences = new Vector<String>();
 
-		URL path = getClass().getResource("/resources/AlternateNames");
+		URL path = getClass().getResource("/resources/badSentences");
 		BufferedInputStream stream;
 		try {
 			stream = (BufferedInputStream) path.getContent();
@@ -211,6 +211,8 @@ public class LibraryExplorer {
 							}
 						}
 						if (!lyricsAlreadyInTheFile(lyrics)) {
+							// If the lyrics are not meaningful I drop them
+							tag.setField(FieldKey.LYRICS,"");
 							notifyFailure(artist, title);
 						}
 					}
@@ -239,7 +241,7 @@ public class LibraryExplorer {
 		}
 		return true;
 	}
-
+	
 	private void notifySuccess(String artist, String title) {
 		for (OutputListener listener : outputListeners) {
 			listener.displaySuccessfulOperation("Lyrics found for " + title
