@@ -213,6 +213,7 @@ public class LibraryExplorer {
 						if (!lyricsAlreadyInTheFile(lyrics)) {
 							// If the lyrics are not meaningful I drop them
 							tag.setField(FieldKey.LYRICS,"");
+							audioFile.commit();
 							notifyFailure(artist, title);
 						}
 					}
