@@ -28,6 +28,7 @@ import java.net.URL;
 import java.util.Collection;
 import java.util.Vector;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
@@ -37,6 +38,7 @@ import org.jaudiotagger.tag.Tag;
 import utils.AlternateNames;
 import crawler.Crawler;
 import crawler.LyricsNotFoundException;
+import crawler.LyricsWikiaCrawler;
 import crawler.MetroLyricsCrawler;
 import crawler.SongLyricsCrawler;
 
@@ -68,6 +70,7 @@ public class LibraryExplorer {
 	 */
 	public LibraryExplorer(String path) {
 		this.path = path;
+		crawlers.add(new LyricsWikiaCrawler());
 		crawlers.add(new MetroLyricsCrawler());
 		crawlers.add(new SongLyricsCrawler());
 		loadBadSentences();
@@ -218,10 +221,14 @@ public class LibraryExplorer {
 						}
 					}
 				} catch (Exception e) {
-					logger.severe("Error getting the lyrics for " + current);
+					String message = "Error getting lyrics for " + current;
+					notifyFailure(message);
+					logger.severe(message);
 				}
 			} else {
-				logger.warning("Unrecognized file type: " + current);
+				String message = "Unrecognized file type: " + current;
+				notifyFailure(message);
+				logger.warning(message);
 			}
 		} else {
 			for (String f : current.list()) {
@@ -233,7 +240,7 @@ public class LibraryExplorer {
 	}
 
 	private boolean lyricsAlreadyInTheFile(String lyrics) {
-		if (lyrics.equals(""))
+		if (Pattern.matches("\\s*", lyrics))
 			return false;
 		for (String sentence : badSentences) {
 			if (lyrics.contains(sentence)) {
@@ -241,6 +248,12 @@ public class LibraryExplorer {
 			}
 		}
 		return true;
+	}
+
+	private void notifyFailure(String message) {
+		for (OutputListener listener : outputListeners) {
+			listener.displaySuccessfulOperation(message);
+		}
 	}
 	
 	private void notifySuccess(String artist, String title) {
