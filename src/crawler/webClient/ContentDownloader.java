@@ -64,6 +64,7 @@ public class ContentDownloader {
         HttpResponse response = client.execute(targetHost, request);
         
         if(response.getStatusLine().getStatusCode() != 200){
+        	request.abort();
         	throw new DownloadException(response.getStatusLine().getStatusCode());
         }
         
