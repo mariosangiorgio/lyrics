@@ -19,7 +19,12 @@
 
 package libraryExplorer;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
 import java.util.Collection;
 import java.util.Vector;
 import java.util.logging.Logger;
@@ -50,9 +55,7 @@ public class LibraryExplorer {
 	private AlternateNames alternateNames = AlternateNames
 			.getAlternateNames("/resources/AlternateNames");
 
-	private String[] badSentences = {
-			"Unfortunately, we are not licensed to display the full lyrics for this song at the moment.",
-			"Impossibile trovare testo: nel titolo del brano sono presenti caratteri non-ASCII." };
+	private Collection<String> badSentences;
 
 	private Collection<OutputListener> outputListeners = new Vector<OutputListener>();
 
@@ -67,6 +70,30 @@ public class LibraryExplorer {
 		this.path = path;
 		crawlers.add(new MetroLyricsCrawler());
 		crawlers.add(new SongLyricsCrawler());
+		loadBadSentences();
+	}
+
+	private void loadBadSentences() {
+		badSentences = new Vector<String>();
+
+		URL path = getClass().getResource("/resources/AlternateNames");
+		BufferedInputStream stream;
+		try {
+			stream = (BufferedInputStream) path.getContent();
+			InputStreamReader streamReader = new InputStreamReader(stream);
+			BufferedReader reader = new BufferedReader(streamReader);
+
+			String line;
+			while ((line = reader.readLine()) != null) {
+				badSentences.add(line);
+			}
+			stream.close();
+			streamReader.close();
+			reader.close();
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -81,7 +108,7 @@ public class LibraryExplorer {
 	 *            the proxy port
 	 */
 	public LibraryExplorer(String path, String proxyHostname, int proxyPort) {
-		this.path = path;
+		this(path);
 		crawlers.add(new MetroLyricsCrawler(proxyHostname, proxyPort));
 		crawlers.add(new SongLyricsCrawler(proxyHostname, proxyPort));
 	}
