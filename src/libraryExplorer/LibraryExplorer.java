@@ -170,65 +170,58 @@ public class LibraryExplorer {
 	public void explore(String path) {
 		File current = new File(path);
 		if (current.isFile()) {
-			if (path.toLowerCase().endsWith(".mp3")) {
-				try {
-					AudioFile audioFile = AudioFileIO.read(current);
-					Tag tag = audioFile.getTag();
-					if (tag == null) {
-						logger.warning("The file " + current
-								+ " doesn't have any tag");
-					}
-					String lyrics = tag.getFirst(FieldKey.LYRICS);
-
-					// This option is used when we want to override the lyrics
-					// in order to fix their format
-					if (override == true) {
-						tag.setField(FieldKey.LYRICS, lyrics);
-						audioFile.commit();
-					}
-
-					// We want to look for the lyrics in the web
-					else {
-						String artist = tag.getFirst(FieldKey.ARTIST);
-						String title = tag.getFirst(FieldKey.TITLE);
-						for (String artistName : alternateNames
-								.getAlternateNameList(artist)) {
-
-							if (lyricsAlreadyInTheFile(lyrics)) {
-								break;
-							}
-
-							for (Crawler crawler : crawlers) {
-								logger.info("Searching lyrics for " + title
-										+ " by " + artistName + " with "
-										+ crawler.getClass());
-								try {
-									lyrics = crawler.getLyrics(artistName,
-											title);
-									tag.setField(FieldKey.LYRICS, lyrics);
-									audioFile.commit();
-									notifySuccess(artist, title);
-									break;
-								} catch (LyricsNotFoundException ex) {
-								}
-							}
-						}
-						if (!lyricsAlreadyInTheFile(lyrics)) {
-							// If the lyrics are not meaningful I drop them
-							tag.setField(FieldKey.LYRICS,"");
-							audioFile.commit();
-							notifyFailure(artist, title);
-						}
-					}
-				} catch (Exception e) {
-					String message = "Error getting lyrics for " + current;
-					notifyFailure(message);
-					logger.severe(message);
+			try {
+				AudioFile audioFile = AudioFileIO.read(current);
+				Tag tag = audioFile.getTag();
+				if (tag == null) {
+					logger.warning("The file " + current
+							+ " doesn't have any tag");
 				}
-			} else {
-				String message = "Unrecognized file type: " + current;
+				String lyrics = tag.getFirst(FieldKey.LYRICS);
+
+				// This option is used when we want to override the lyrics
+				// in order to fix their format
+				if (override == true) {
+					tag.setField(FieldKey.LYRICS, lyrics);
+					audioFile.commit();
+				}
+
+				// We want to look for the lyrics in the web
+				else {
+					String artist = tag.getFirst(FieldKey.ARTIST);
+					String title = tag.getFirst(FieldKey.TITLE);
+					for (String artistName : alternateNames
+							.getAlternateNameList(artist)) {
+
+						if (lyricsAlreadyInTheFile(lyrics)) {
+							break;
+						}
+
+						for (Crawler crawler : crawlers) {
+							logger.info("Searching lyrics for " + title
+									+ " by " + artistName + " with "
+									+ crawler.getClass());
+							try {
+								lyrics = crawler.getLyrics(artistName, title);
+								tag.setField(FieldKey.LYRICS, lyrics);
+								audioFile.commit();
+								notifySuccess(artist, title);
+								break;
+							} catch (LyricsNotFoundException ex) {
+							}
+						}
+					}
+					if (!lyricsAlreadyInTheFile(lyrics)) {
+						// If the lyrics are not meaningful I drop them
+						tag.setField(FieldKey.LYRICS, "");
+						audioFile.commit();
+						notifyFailure(artist, title);
+					}
+				}
+			} catch (Exception e) {
+				String message = "Error getting lyrics for " + current;
 				notifyFailure(message);
-				logger.warning(message);
+				logger.severe(message);
 			}
 		} else {
 			for (String f : current.list()) {
@@ -255,7 +248,7 @@ public class LibraryExplorer {
 			listener.displaySuccessfulOperation(message);
 		}
 	}
-	
+
 	private void notifySuccess(String artist, String title) {
 		for (OutputListener listener : outputListeners) {
 			listener.displaySuccessfulOperation("Lyrics found for " + title
