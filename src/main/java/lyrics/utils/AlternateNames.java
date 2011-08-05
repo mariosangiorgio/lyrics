@@ -17,7 +17,7 @@
  *  along with lyrics.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package utils;
+package lyrics.utils;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;

@@ -17,28 +17,52 @@
  *  along with lyrics.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package crawler;
+package lyrics.crawler;
 
 import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import lyrics.crawler.webClient.DownloadException;
+
 import org.apache.http.HttpHost;
 
-import crawler.webClient.DownloadException;
 
-public class SongLyricsCrawler extends Crawler {
+public class MetroLyricsCrawler extends Crawler {
+	private static final Pattern lyricsURL = Pattern
+			.compile("<p>Exact Title Match - <a href=\"([^\"]*)\"");
 	private static final Pattern lyrics = Pattern
-			.compile("<p id=\"songLyricsDiv\"[^>]*>\\s*([&#\\d;<br\\s/>]*)\\[[^\\]]*\\]([&#\\d;<br\\s/>]*)</p>");
+			.compile("<div id=\"lyrics\">([&#\\d;<br\\s/>]*)</div>");
 
-	public SongLyricsCrawler() {
+	public MetroLyricsCrawler() {
 		super();
-		host = new HttpHost("www.songlyrics.com");
+		host = new HttpHost("www.metrolyrics.com");
 	}
 
-	public SongLyricsCrawler(String proxyHostname, int proxyPort) {
+	public MetroLyricsCrawler(String proxyHostname, int proxyPort) {
 		super();
-		host = new HttpHost("www.songlyrics.com");
+		host = new HttpHost("www.metrolyrics.com");
+	}
+
+	@Override
+	protected String search(String author, String title)
+			throws LyricsNotFoundException {
+		author = author.replace(' ', '+');
+		title = title.replace(' ', '+');
+		try {
+			String contentPage = "/search.php?search=" + author + "+" + title
+					+ "&category=artisttitle";
+			String content = downloader.getPage(host, contentPage);
+			Matcher lyricsURLMatcher = lyricsURL.matcher(content);
+			if (lyricsURLMatcher.find()) {
+				return "/" + lyricsURLMatcher.group(1);
+			}
+		} catch (DownloadException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		throw new LyricsNotFoundException();
 	}
 
 	@Override
@@ -47,7 +71,7 @@ public class SongLyricsCrawler extends Crawler {
 			String content = downloader.getPage(host, address);
 			Matcher lyricsMatcher = lyrics.matcher(content);
 			if (lyricsMatcher.find()) {
-				String lyrics = lyricsMatcher.group(1) + lyricsMatcher.group(2);
+				String lyrics = lyricsMatcher.group(1);
 				lyrics = lyrics.replace("<br />", "");
 				lyrics = decodeHTML(lyrics);
 				lyrics = lyrics.replace("<br />", "");
@@ -59,25 +83,5 @@ public class SongLyricsCrawler extends Crawler {
 			e.printStackTrace();
 		}
 		throw new LyricsNotFoundException();
-	}
-
-	@Override
-	protected String search(String author, String title)
-			throws LyricsNotFoundException {
-		String contentAddress = "/" + author + "/" + title + "-lyrics/";
-		contentAddress = contentAddress.replace(" ", "-");
-		contentAddress = encodeSpecialCharacters(contentAddress);
-
-		try {
-			String content = downloader.getPage(host, contentAddress);
-			if (!content.contains("Sorry, we have no " + author + " - " + title
-					+ " lyrics at the moment.")) {
-				return contentAddress;
-			}
-		} catch (Exception e) {
-		}
-
-		throw new LyricsNotFoundException();
-
 	}
 }

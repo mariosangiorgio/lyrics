@@ -1,5 +1,5 @@
 /*
- *	Mario Sangiorgio - mariosangiorgio AT gmail DOT com
+ * 	Mario Sangiorgio - mariosangiorgio AT gmail DOT com
  *
  *  This file is part of lyrics.
  * 
@@ -17,36 +17,10 @@
  *  along with lyrics.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package userInterface.graphical.listeners;
+package lyrics.crawler;
 
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+public class LyricsNotFoundException extends Exception {
 
-import userInterface.graphical.MainWindow;
+	private static final long serialVersionUID = 2734647660092432799L;
 
-public class MacOSXKeyListener implements KeyListener {
-	private MainWindow frame;
-
-	public MacOSXKeyListener(MainWindow frame) {
-		this.frame = frame;
-	}
-
-	@Override
-	public void keyPressed(KeyEvent e) {
-		if(e.isMetaDown() && (e.getKeyChar()=='w' || e.getKeyChar()=='W')){
-			frame.dispose();
-		}
-	}
-
-	@Override
-	public void keyReleased(KeyEvent e) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void keyTyped(KeyEvent e) {
-		// TODO Auto-generated method stub
-
-	}
 }

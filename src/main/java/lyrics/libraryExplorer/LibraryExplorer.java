@@ -17,7 +17,7 @@
  *  along with lyrics.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package libraryExplorer;
+package lyrics.libraryExplorer;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -30,17 +30,18 @@ import java.util.Vector;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
+import lyrics.crawler.Crawler;
+import lyrics.crawler.LyricsNotFoundException;
+import lyrics.crawler.LyricsWikiaCrawler;
+import lyrics.crawler.MetroLyricsCrawler;
+import lyrics.crawler.SongLyricsCrawler;
+import lyrics.utils.AlternateNames;
+
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.Tag;
 
-import utils.AlternateNames;
-import crawler.Crawler;
-import crawler.LyricsNotFoundException;
-import crawler.LyricsWikiaCrawler;
-import crawler.MetroLyricsCrawler;
-import crawler.SongLyricsCrawler;
 
 /**
  * Class that searches the library for audio files, reads their tags and finally

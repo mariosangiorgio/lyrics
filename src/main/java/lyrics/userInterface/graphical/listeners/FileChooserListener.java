@@ -17,14 +17,15 @@
  *  along with lyrics.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package userInterface.graphical.listeners;
+package lyrics.userInterface.graphical.listeners;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 import javax.swing.JFileChooser;
 
-import userInterface.graphical.MainWindow;
+import lyrics.userInterface.graphical.MainWindow;
+
 
 public class FileChooserListener implements MouseListener{
 	private MainWindow parentFrame;

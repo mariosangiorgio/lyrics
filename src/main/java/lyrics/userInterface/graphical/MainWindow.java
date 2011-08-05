@@ -17,7 +17,7 @@
  *  along with lyrics.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package userInterface.graphical;
+package lyrics.userInterface.graphical;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -34,10 +34,10 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-import libraryExplorer.LibraryExplorer;
-import libraryExplorer.OutputListener;
-import userInterface.graphical.listeners.FileChooserListener;
-import userInterface.graphical.listeners.MacOSXKeyListener;
+import lyrics.libraryExplorer.LibraryExplorer;
+import lyrics.libraryExplorer.OutputListener;
+import lyrics.userInterface.graphical.listeners.FileChooserListener;
+import lyrics.userInterface.graphical.listeners.MacOSXKeyListener;
 
 public class MainWindow extends JFrame implements OutputListener {
 	private static final long serialVersionUID = 7216505715440605172L;

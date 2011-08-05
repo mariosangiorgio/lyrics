@@ -17,14 +17,14 @@
  *  along with lyrics.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package userInterface.commandLine;
+package lyrics.userInterface.commandLine;
 
 import gnu.getopt.Getopt;
 import gnu.getopt.LongOpt;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import libraryExplorer.LibraryExplorer;
+import lyrics.libraryExplorer.LibraryExplorer;
 
 public class Lyrics {
 	public static void main(String[] args) {

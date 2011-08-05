@@ -17,25 +17,37 @@
  *  along with lyrics.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package userInterface.graphical;
+package lyrics.userInterface.graphical.listeners;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
-import javax.swing.JFrame;
+import lyrics.userInterface.graphical.MainWindow;
 
-public class Lyrics {
-	public static void main(String[] args) {
-		// Suppressing jaudiotagger loggers
-		String[] loggers = { "org.jaudiotagger.audio",
-				"org.jaudiotagger.tag.id3", "org.jaudiotagger.tag.datatype" };
-		for (String loggerName : loggers) {
-			Logger.getLogger(loggerName).setLevel(Level.OFF);
-		}
-		
-		JFrame.setDefaultLookAndFeelDecorated(true);
-		JFrame mainWindow = new MainWindow();
-		mainWindow.setVisible(true);
+
+public class MacOSXKeyListener implements KeyListener {
+	private MainWindow frame;
+
+	public MacOSXKeyListener(MainWindow frame) {
+		this.frame = frame;
 	}
 
+	@Override
+	public void keyPressed(KeyEvent e) {
+		if(e.isMetaDown() && (e.getKeyChar()=='w' || e.getKeyChar()=='W')){
+			frame.dispose();
+		}
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void keyTyped(KeyEvent e) {
+		// TODO Auto-generated method stub
+
+	}
 }

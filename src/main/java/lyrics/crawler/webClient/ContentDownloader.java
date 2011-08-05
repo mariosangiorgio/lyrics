@@ -17,7 +17,7 @@
  *  along with lyrics.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package crawler.webClient;
+package lyrics.crawler.webClient;
 
 
 import java.io.IOException;

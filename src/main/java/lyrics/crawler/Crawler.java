@@ -17,14 +17,15 @@
  *  along with lyrics.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package crawler;
+package lyrics.crawler;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import lyrics.crawler.webClient.ContentDownloader;
+
 import org.apache.http.HttpHost;
 
-import crawler.webClient.ContentDownloader;
 
 /**
  * Abstract class that defines the behavior of a lyrics crawler. All the

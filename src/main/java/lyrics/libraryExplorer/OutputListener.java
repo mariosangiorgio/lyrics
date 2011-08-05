@@ -17,10 +17,25 @@
  *  along with lyrics.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package crawler;
+package lyrics.libraryExplorer;
 
-public class LyricsNotFoundException extends Exception {
+/**
+ * Interface that has to be implemented by the classes that wants to be notified
+ * about what is going on
+ * 
+ * @author mariosangiorgio
+ * 
+ */
+public interface OutputListener {
+	/**
+	 * Method to display a message notifying a successful operation
+	 * @param message the message that has to be displayed
+	 */
+	public void displaySuccessfulOperation(String message);
 
-	private static final long serialVersionUID = 2734647660092432799L;
-
+	/**
+	 * Method to display a message notifying a failed operation
+	 * @param message the message that has to be displayed
+	 */
+	public void displayUnsuccessfulOperation(String message);
 }

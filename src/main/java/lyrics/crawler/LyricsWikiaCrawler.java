@@ -17,15 +17,16 @@
  *  along with lyrics.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package crawler;
+package lyrics.crawler;
 
 import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import lyrics.crawler.webClient.DownloadException;
+
 import org.apache.http.HttpHost;
 
-import crawler.webClient.DownloadException;
 
 public class LyricsWikiaCrawler extends Crawler {
 	private static final Pattern lyricsNotFound = Pattern

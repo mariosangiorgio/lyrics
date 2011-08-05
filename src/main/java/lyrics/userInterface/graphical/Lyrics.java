@@ -1,5 +1,5 @@
 /*
- * 	Mario Sangiorgio - mariosangiorgio AT gmail DOT com
+ *	Mario Sangiorgio - mariosangiorgio AT gmail DOT com
  *
  *  This file is part of lyrics.
  * 
@@ -17,25 +17,25 @@
  *  along with lyrics.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package libraryExplorer;
+package lyrics.userInterface.graphical;
 
-/**
- * Interface that has to be implemented by the classes that wants to be notified
- * about what is going on
- * 
- * @author mariosangiorgio
- * 
- */
-public interface OutputListener {
-	/**
-	 * Method to display a message notifying a successful operation
-	 * @param message the message that has to be displayed
-	 */
-	public void displaySuccessfulOperation(String message);
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-	/**
-	 * Method to display a message notifying a failed operation
-	 * @param message the message that has to be displayed
-	 */
-	public void displayUnsuccessfulOperation(String message);
+import javax.swing.JFrame;
+
+public class Lyrics {
+	public static void main(String[] args) {
+		// Suppressing jaudiotagger loggers
+		String[] loggers = { "org.jaudiotagger.audio",
+				"org.jaudiotagger.tag.id3", "org.jaudiotagger.tag.datatype" };
+		for (String loggerName : loggers) {
+			Logger.getLogger(loggerName).setLevel(Level.OFF);
+		}
+		
+		JFrame.setDefaultLookAndFeelDecorated(true);
+		JFrame mainWindow = new MainWindow();
+		mainWindow.setVisible(true);
+	}
+
 }
