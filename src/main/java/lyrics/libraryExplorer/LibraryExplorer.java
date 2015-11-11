@@ -58,7 +58,7 @@ public class LibraryExplorer {
 	private AlternateNames alternateNames = AlternateNames
 			.getAlternateNames("/resources/AlternateNames");
 
-	private Collection<String> badSentences;
+	private Collection<String> badSentences = new Vector<String>();
 
 	private Collection<OutputListener> outputListeners = new Vector<OutputListener>();
 
@@ -74,12 +74,10 @@ public class LibraryExplorer {
 		crawlers.add(new LyricsWikiaCrawler());
 		crawlers.add(new MetroLyricsCrawler());
 		crawlers.add(new SongLyricsCrawler());
-		loadBadSentences();
+		// loadBadSentences(); TODO: load them properly from a configuration file
 	}
 
 	private void loadBadSentences() {
-		badSentences = new Vector<String>();
-
 		URL path = getClass().getResource("/resources/badSentences");
 		BufferedInputStream stream;
 		try {
